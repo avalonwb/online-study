@@ -1,5 +1,6 @@
 import { Icon, Badge } from 'antd'
 import css from './layout.less'
+import Link from 'next/link'
 
 export default class Header extends React.Component {
   render() {
@@ -11,7 +12,7 @@ export default class Header extends React.Component {
           <img src='/static/img/asset-logoIco.png' alt='' />
         </a>
         <div className={css.left + ' fl'}>
-          <a className={css.a} href=''>
+          <a className={css.a} href='/'>
             首页
           </a>
           <a className={css.a} href=''>
@@ -27,13 +28,15 @@ export default class Header extends React.Component {
         </div>
         <div className={css.right + ' fr'}>
           <div className={css.signin}>
-            <Badge count={count}>
-              {/* 加入antd中的购物车图标 */}
-              <Icon type='shopping-cart' className={css.Icon} />
-            </Badge>
             {/* 根据登录状态渲染 */}
             {user.uid ? (
               <span>
+                <Link href='/cart'>
+                  <Badge count={count}>
+                    {/* 加入antd中的购物车图标 */}
+                    <Icon type='shopping-cart' className={css.Icon} />
+                  </Badge>
+                </Link>
                 <a href=''>
                   <Icon type='bell' theme='twoTone' />
                   个人中心
@@ -57,7 +60,8 @@ export default class Header extends React.Component {
               </span>
             ) : (
               <span>
-                <a href=''>登录 </a> <span> |</span> <a href='#'> 注册</a>
+                <a href='/account'>登录 </a> <span> |</span>{' '}
+                <a href='/account'> 注册</a>
               </span>
             )}
           </div>

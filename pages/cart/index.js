@@ -14,7 +14,11 @@ class Cart extends Component {
     }
     this.rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
-        //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        // console.log(
+        //   `selectedRowKeys: ${selectedRowKeys}`,
+        //   'selectedRows: ',
+        //   selectedRows
+        // )
 
         // 计算用户勾选商品总价格,发现selectedRows里面每个数据都有一个sell_price，只要全部相加即可得到总价格
         if (selectedRows.length > 0) {
@@ -22,6 +26,8 @@ class Cart extends Component {
           selectedRows.forEach(item => {
             totalAmount += item.sell_price
           })
+
+          // 存储选中的结算课程到redux 订单确认页面要用
 
           // 修改state中的totalAmount
           this.setState({
@@ -60,7 +66,7 @@ class Cart extends Component {
         title: '操作',
         dataIndex: 'shop_car_id',
         render: (text, data, index) => (
-          <a onClick={this.del.bind(this, text, index, data)}>删除</a>
+          <a onClick={this.del.bind(this, text, data, index)}>删除</a>
         )
       }
     ]
@@ -70,7 +76,7 @@ class Cart extends Component {
     request.get('/ch/shop/getshopcarlist').then(res => {
       if (res.status == 2) {
         message.warn('用户未登录', 1, () => {
-          router.push({ pathname: '/account/login' })
+          router.push({ pathname: '/account' })
         })
         return
       }
