@@ -16,6 +16,7 @@
     "less": "3.8.1",
     "next": "9.0.5",
     "next-redux-wrapper": "2.0.0",
+    "qrcode.react": "^0.9.3",
     "react": "16.9.0",
     "react-dom": "16.9.0",
     "react-redux": "5.0.7",

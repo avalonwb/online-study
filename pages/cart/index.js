@@ -3,6 +3,7 @@ import css from './index.less'
 import request from '../../utils/request'
 import router from 'next/router'
 import { message, Row, Col, Button, Table } from 'antd'
+import { connect } from 'react-redux'
 
 class Cart extends Component {
   constructor() {
@@ -28,6 +29,7 @@ class Cart extends Component {
           })
 
           // 存储选中的结算课程到redux 订单确认页面要用
+          this.props.addOrder(selectedRows)
 
           // 修改state中的totalAmount
           this.setState({
@@ -35,6 +37,9 @@ class Cart extends Component {
             disabled: false //表示只要用户有勾选商品，就将结算按钮变为可用
           })
         } else {
+          // 清空redux中的购买课程
+          this.props.setOrder([])
+
           this.setState({
             totalAmount: 0,
             disabled: true //将结算按钮变为不可用
@@ -66,13 +71,17 @@ class Cart extends Component {
         title: '操作',
         dataIndex: 'shop_car_id',
         render: (text, data, index) => (
-          <a onClick={this.del.bind(this, text, data, index)}>删除</a>
+          <a onClick={this.del.bind(this, text)}>删除</a>
         )
       }
     ]
   }
 
   componentDidMount() {
+    this.getCartList()
+  }
+
+  getCartList() {
     request.get('/ch/shop/getshopcarlist').then(res => {
       if (res.status == 2) {
         message.warn('用户未登录', 1, () => {
@@ -86,6 +95,9 @@ class Cart extends Component {
         return
       }
 
+      // 更新redux中关于购物车课程数量的数据
+      this.props.setCount(res.message.length)
+
       // 将购物车的数据赋值给state.data
       this.setState({
         data: res.message
@@ -93,11 +105,31 @@ class Cart extends Component {
     })
   }
 
-  del(text, index, data) {
-    console.log(text, index, data)
+  del(id) {
+    // console.log(id)
+    request.get('/ch/shop/deleteshopcar/' + id).then(res => {
+      if (res.status == 2) {
+        message.warn('用户未登录', 1, () => {
+          router.push({ pathname: '/account' })
+        })
+        return
+      }
+
+      if (res.status == 1) {
+        message.error(res.message, 1)
+        return
+      }
+
+      // 删除成功
+      message.success('删除成功', 1, () => {
+        this.getCartList()
+      })
+    })
   }
 
-  check() {}
+  check() {
+    router.push({ pathname: '/cart/confirm' })
+  }
 
   render() {
     return (
@@ -151,4 +183,30 @@ class Cart extends Component {
   }
 }
 
-export default Cart
+const mapDispatchToProps = dispatch => {
+  return {
+    addOrder: list => {
+      dispatch({
+        type: 'ADD_ORDER_LIST',
+        payload: list
+      })
+    },
+    setOrder: list => {
+      dispatch({
+        type: 'SET_ORDER_LIST',
+        payload: list
+      })
+    },
+    setCount: count => {
+      dispatch({
+        type: 'CHANGE_COUNT',
+        payload: count
+      })
+    }
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Cart)

@@ -1,6 +1,7 @@
 // 改变购物车课程数量
 let init = {
-  count: 0
+  count: 0,
+  orderList: []
 }
 
 function Cart(state = init, action) {
@@ -14,8 +15,23 @@ function Cart(state = init, action) {
         ...state,
         count: payload
       }
-      default:
-        return state
+      case 'ADD_ORDER_LIST':
+        return {
+          ...state,
+          orderList: payload
+        }
+        case 'SET_ORDER_LIST':
+          return {
+            ...state,
+            orderList: payload
+          }
+          case 'CHANGE_COUNT':
+            return {
+              ...state,
+              count: payload
+            }
+            default:
+              return state
   }
 }
 
