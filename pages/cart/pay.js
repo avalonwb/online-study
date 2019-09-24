@@ -56,7 +56,7 @@ class Pay extends React.Component {
                     clearInterval(intervalHander)
                   }
                   // 跳转到个人中心
-                  router.push({ pathname: '/center' })
+                  router.push({ pathname: '/center/course' })
                 })
               }
             })

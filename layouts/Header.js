@@ -37,7 +37,7 @@ export default class Header extends React.Component {
                     <Icon type='shopping-cart' className={css.Icon} />
                   </Badge>
                 </Link>
-                <a href=''>
+                <a href='/center/course'>
                   <Icon type='bell' theme='twoTone' />
                   个人中心
                 </a>
